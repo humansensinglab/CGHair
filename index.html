@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="CGHair: Compact Gaussian Hair Reconstruction with Card Clustering. A compact pipeline for high-fidelity hair reconstruction from multi-view images.">
+  <meta name="keywords" content="CGHair, hair reconstruction, 3D Gaussian Splatting, hair cards, compact representation, CVPR 2026">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CGHair: Compact Gaussian Hair Reconstruction with Card Clustering</title>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+  <!-- Project Styles -->
+  <link rel="stylesheet" href="static/css/style.css">
+</head>
+
+<body>
+
+<!-- ══════════ NOTICE BANNER ══════════ -->
+<!-- <div class="notice-banner">
+  This page is under construction. Content and materials will be updated soon.
+</div> -->
+
+<!-- ══════════ HERO ══════════ -->
+<header class="hero">
+  <div class="hero-badge">CVPR 2026</div>
+  <h1><span class="highlight">CGHair</span>: Compact Gaussian Hair Reconstruction with Card Clustering</h1>
+  <p class="subtitle">High-fidelity hair reconstruction with 200x less memory through hierarchical card clustering and shared Gaussian textures.</p>
+
+  <!-- Authors -->
+  <div class="authors">
+    <span><a>Haimin Luo</a><sup>1,2</sup></span>
+    <span><a>Srinjay Sarkar</a><sup>1</sup></span>
+    <span><a>Albert Mosella-Montoro</a><sup>1</sup></span>
+    <span><a>Francisco Vicente Carrasco</a><sup>1</sup></span>
+    <span><a>Fernando De la Torre</a><sup>1</sup></span>
+  </div>
+  <div class="affiliation">
+    <sup>1</sup>Carnegie Mellon University &nbsp;&nbsp;
+    <sup>2</sup>ShanghaiTech University
+  </div>
+
+  <!-- Buttons -->
+  <div class="btn-row">
+    <a href="https://arxiv.org/abs/2604.03716" target="_blank" class="btn btn-primary">
+      <span class="icon"><i class="fas fa-file-pdf"></i></span><span>Paper</span>
+    </a>
+    <!-- <a href="#" class="btn" onclick="openPDF('static/pdfs/supplementary.pdf','Supplementary');return false;">
+      <span class="icon"><i class="fas fa-file-alt"></i></span><span>Supplementary</span>
+    </a> -->
+    <!-- <a href="#" class="btn btn-disabled">
+      <span class="icon"><i class="ai ai-arxiv"></i></span><span>arXiv (Coming Soon)</span>
+    </a>
+    <a href="#results" class="btn">
+      <span class="icon"><i class="fab fa-youtube"></i></span><span>Video</span>
+    </a>
+    <a href="#" class="btn btn-disabled">
+      <span class="icon"><i class="fab fa-github"></i></span><span>Code (Coming Soon)</span>
+    </a> -->
+  </div>
+
+  <!-- TL;DR -->
+  <div class="tldr">
+    <strong>TL;DR</strong> &mdash; We present a compact pipeline for hair reconstruction from multi-view images. By clustering hair strands into representative cards and sharing Gaussian texture codebooks, we achieve comparable rendering quality with over 200x lower memory and 4x faster strand reconstruction than prior methods.
+  </div>
+
+  <!-- Teaser -->
+  <div class="figure fig-medium" style="margin-top:48px;">
+    <img src="static/images/teaser.png" alt="CGHair method overview showing hierarchical clustering from strands to hair cards to shared Gaussian textures">
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card fade-in">
+      <div class="stat-number">200x</div>
+      <div class="stat-label">Memory<br>Reduction</div>
+    </div>
+    <div class="stat-card fade-in">
+      <div class="stat-number">4x</div>
+      <div class="stat-label">Faster Strand<br>Reconstruction</div>
+    </div>
+
+  </div>
+</header>
+
+
+<!-- ══════════ ABSTRACT ══════════ -->
+<section>
+  <div class="container fade-in">
+    <div class="section-label">Abstract</div>
+    <h2>Overview</h2>
+    <p>We present a compact pipeline for high-fidelity hair reconstruction from multi-view images. While recent 3D Gaussian Splatting (3DGS) methods achieve realistic results, they often require millions of primitives, leading to high storage and rendering costs.</p>
+    <p>Observing that hair exhibits structural and visual similarities across a hairstyle, we cluster strands into representative hair cards and group these into shared texture codebooks. Our approach integrates this structure with 3DGS rendering, significantly reducing reconstruction time and storage while maintaining comparable visual quality. In addition, we propose a generative prior accelerated method to reconstruct the initial strand geometry from a set of images.</p>
+    <p>Our experiments demonstrate a 4-fold reduction in strand reconstruction time and achieve comparable rendering performance with over 200x lower memory footprint.</p>
+
+    <h3>Video Presentation</h3>
+    <!-- <div class="video-placeholder">
+      <i class="fas fa-video"></i>
+      <p>Coming Soon</p>
+    </div> -->
+    <div class="video-container">
+      <iframe width="100%" style="aspect-ratio:16/9;" src="https://www.youtube.com/embed/iRa7C-ApFyM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════ KEY CONTRIBUTIONS ══════════ -->
+<section>
+  <div class="container-wide fade-in">
+    <div class="section-label">Key Contributions</div>
+    <h2>What We Contribute</h2>
+    <div class="accent-cards">
+      <div class="accent-card">
+        <h4>1. Generative Prior Accelerated Strand Reconstruction</h4>
+        <p>An efficient method for reconstructing strand-level hair geometry from multi-view images, leveraging the PERM parametric model for a 4x speedup over prior approaches.</p>
+      </div>
+      <div class="accent-card">
+        <h4>2. Hair Card-Guided Hierarchical Clustering</h4>
+        <p>A compact hair modeling pipeline that clusters strands into representative hair cards, significantly reducing redundancy at the strand level.</p>
+      </div>
+      <div class="accent-card">
+        <h4>3. Shared Gaussian Appearance Codebook</h4>
+        <p>A shared Gaussian texture codebook for hair cards, enabling scalable and consistent appearance modeling across structurally similar hair regions with 200x memory reduction.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════ METHOD ══════════ -->
+<section>
+  <div class="container-wide fade-in">
+    <div class="section-label">Method</div>
+    <h2>Pipeline Overview</h2>
+    <p>Given monocular video frames, we reconstruct hair strands with our efficient strand generator, group them by hair cards, and further cluster into card groups with shared Gaussian textures for compact appearance modeling.</p>
+
+    <div class="figure fig-wide">
+      <img src="static/images/pipeline_out.png" alt="Full pipeline overview">
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-tag">Stage 1</div>
+        <h4>Preprocessing</h4>
+        <p>Estimate camera poses from multi-view images, compute hair segmentation masks and orientation maps using Gabor filters for directional cues.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">Stage 2</div>
+        <h4>Gaussian Fitting &amp; Strand Generation</h4>
+        <p>Reconstruct head and hair Gaussians separately, fit a FLAME head model, then use PERM's generative prior to efficiently decode strand geometry from latent UV textures.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">Stage 3</div>
+        <h4>Hair Card Clustering</h4>
+        <p>Cluster strands into groups, construct representative hair cards for each cluster, and extract per-card geometry textures for compact representation.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">Stage 4</div>
+        <h4>Compact Gaussian Appearance</h4>
+        <p>Further cluster hair cards by appearance into groups with shared Gaussian texture codebooks, then optimize end-to-end with a tailored 3DGS scheme.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════ RESULTS ══════════ -->
+<section id="results">
+  <div class="container-wide fade-in">
+    <div class="section-label">Results</div>
+
+    <h2>Reconstruction Results</h2>
+    <p>Novel-view rendering results of our compact CGHair representation.</p>
+
+    <div class="carousel" id="reconstructionCarousel">
+      <button class="carousel-btn carousel-prev" onclick="carouselPrevById('reconstructionCarousel')" aria-label="Previous">&lsaquo;</button>
+      <div class="carousel-track">
+        <div class="carousel-slide active">
+          <video controls playsinline preload="metadata" autoplay muted loop>
+            <source src="static/videos/recon_results/qualitative_recon_results_f56.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="carousel-slide">
+          <video controls playsinline preload="metadata" muted loop>
+            <source src="static/videos/recon_results/qualitative_recon_results_jenya.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="carousel-slide">
+          <video controls playsinline preload="metadata" muted loop>
+            <source src="static/videos/recon_results/qualitative_recon_results_f98.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="carousel-slide">
+          <video controls playsinline preload="metadata" muted loop>
+            <source src="static/videos/recon_results/qualitative_recon_results_f73.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+      <button class="carousel-btn carousel-next" onclick="carouselNextById('reconstructionCarousel')" aria-label="Next">&rsaquo;</button>
+      <div class="carousel-dots"></div>
+    </div>
+
+    <h2 style="margin-top:48px;">Comparison</h2>
+    <p>Qualitative comparison of our method against prior approaches.</p>
+
+    <div class="carousel" id="comparisonCarousel">
+      <button class="carousel-btn carousel-prev" onclick="carouselPrevById('comparisonCarousel')" aria-label="Previous">&lsaquo;</button>
+      <div class="carousel-track">
+        <div class="carousel-slide active">
+          <video controls playsinline preload="metadata" autoplay muted loop>
+            <source src="static/videos/comparison/sota_comp_recon.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="carousel-slide">
+          <video controls playsinline preload="metadata" muted loop>
+            <source src="static/videos/comparison/sota_comp_strands.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+      <button class="carousel-btn carousel-next" onclick="carouselNextById('comparisonCarousel')" aria-label="Next">&rsaquo;</button>
+      <div class="carousel-dots"></div>
+    </div>
+
+    <h2 style="margin-top:48px;">CGHair Animation Results</h2>
+    <p>Strand-level animations rendered with our compact CGHair representation across diverse hairstyles.</p>
+
+    <div class="carousel" id="animationCarousel">
+      <button class="carousel-btn carousel-prev" onclick="carouselPrevById('animationCarousel')" aria-label="Previous">&lsaquo;</button>
+      <div class="carousel-track">
+        <div class="carousel-slide active">
+          <video controls playsinline preload="metadata" autoplay muted loop>
+            <source src="static/videos/animation/animation_results_f56.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="carousel-slide">
+          <video controls playsinline preload="metadata" muted loop>
+            <source src="static/videos/animation/animation_results_hs1.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="carousel-slide">
+          <video controls playsinline preload="metadata" muted loop>
+            <source src="static/videos/animation/animation_results_big_wavy.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="carousel-slide">
+          <video controls playsinline preload="metadata" muted loop>
+            <source src="static/videos/animation/animation_results_jenya.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="carousel-slide">
+          <video controls playsinline preload="metadata" muted loop>
+            <source src="static/videos/animation/animation_results_pinkhair.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+      <button class="carousel-btn carousel-next" onclick="carouselNextById('animationCarousel')" aria-label="Next">&rsaquo;</button>
+      <div class="carousel-dots"></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════ CITATION ══════════ -->
+<section>
+  <div class="container fade-in">
+    <div class="section-label">Citation</div>
+    <h2>BibTeX</h2>
+    <div class="bibtex-block" id="bibtex">
+      <button class="copy-btn" onclick="copyBibtex()">Copy</button>@inproceedings{cghair2026,
+  title     = {CGHair: Compact Gaussian Hair Reconstruction with Card Clustering},
+  author    = {Luo, Haimin and Sarkar, Srinjay and Mosella-Montoro, Albert and Vicente Carrasco, Francisco and de la Torre, Fernando},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2026}
+}</div>
+  </div>
+</section>
+
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="footer-inner">
+    <!-- <div class="visit-counter">
+      <img src="https://visitor-badge.laobi.icu/badge?page_id=cghair_cvpr&left_color=%23444&right_color=%23C41230&left_text=Visitors" alt="Visitors">
+    </div>
+    <div class="footer-divider"></div> -->
+    <p class="footer-legal">
+      <a href="https://github.com/seemandhar/paper-template" target="_blank">Template</a> by <a href="https://seemandhar.github.io/" target="_blank">Seemandhar Jain</a>.
+      Licensed under <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">CC BY-SA 4.0</a>.
+    </p>
+  </div>
+</footer>
+
+
+<!-- PDF Viewer Modal -->
+<div class="pdf-overlay" id="pdfOverlay">
+  <div class="pdf-toolbar">
+    <div class="pdf-title" id="pdfTitle">Paper</div>
+    <div class="pdf-toolbar-actions">
+      <a class="pdf-toolbar-btn" id="pdfDownload" href="#" download>
+        <i class="fas fa-download"></i><span class="btn-label">Download</span>
+      </a>
+      <a class="pdf-toolbar-btn" id="pdfNewTab" href="#" target="_blank">
+        <i class="fas fa-external-link-alt"></i><span class="btn-label">Open in Tab</span>
+      </a>
+      <button class="pdf-toolbar-btn close-btn" onclick="closePDF()" aria-label="Close">&times;</button>
+    </div>
+  </div>
+  <iframe class="pdf-viewer-frame" id="pdfFrame" src=""></iframe>
+</div>
+
+<script src="static/js/main.js"></script>
+</body>
+</html>
